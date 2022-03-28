@@ -5,7 +5,7 @@
   "main": "electron/electron.js",
   "scripts": {
     "dev": "vite",
-    "build": " vite build",
+    "build": " vite build && rd /s /q docs && Xcopy /E /I dist docs",
     "serve": "vite preview",
     "electron": "wait-on tcp:3000 && cross-env IS_DEV=true electron .",
     "electron:pack": "electron-builder --dir",

@@ -74,7 +74,7 @@ export default {
           <option v-for="(mode, k) in modes" :value="k" :key="k">
             {{ mode }}
           </option>
-        </select>
+        </select><br>
         прозрачность
         <input
           type="range"
