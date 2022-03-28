@@ -87,18 +87,19 @@ export class Img {
   }
   async getDataWithOptions() {
     let pixels;
-    if (this.pixels && this.lastWidth != this.width) {
-      pixels = this.pixels;
-    } else {
+    // if (this.pixels && (this.lastWidth == this.width)) {
+    //   pixels = this.pixels;
+    // } else {
       pixels = await this.getData();
-    }
+    //}
     this.lastWidth = this.width;
     if (this.opacity < 0.95 || vm.canal != "RGB") {
+      const [t1,t2,t3] = [!/R/.test(vm.canal), !/G/.test(vm.canal),!/B/.test(vm.canal)]
       pixels = pixels.map((e, i) => {
         let os = i % 4;
-        if (os == 0 && !/R/.test(vm.canal)) return 0;
-        if (os == 1 && !/G/.test(vm.canal)) return 0;
-        if (os == 2 && !/B/.test(vm.canal)) return 0;
+        if (os == 0 && t1) return 0;
+        if (os == 1 && t2) return 0;
+        if (os == 2 && t3) return 0;
         if (this.opacity < 0.95) return ~~(e * this.opacity);
         return e;
       });

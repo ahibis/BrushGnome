@@ -75,7 +75,7 @@ export default {
             {{ mode }}
           </option>
         </select>
-
+        прозрачность
         <input
           type="range"
           max="1"
@@ -83,7 +83,8 @@ export default {
           step="0.05"
           v-model="img.opacity"
           @change="useMode()"
-        />{{ img.opacity * 100 }}% размер<input
+        />{{ img.opacity * 100 }}%<br> 
+        размер<input
           type="range"
           min="0"
           max="1080"
