@@ -1,5 +1,3 @@
-# Vue 3 + Vite
-
 ### для установки проекта напиши npm i ###
 
 ![картинка](/github/edit.jpg)
@@ -16,3 +14,13 @@
 выбирает канал отображаемый программой
 
 [перейти на сайт](https://ahibis.github.io/image-editor/)
+
+## используемые технологии
+- vue
+- vite
+- electron.js
+- lodash.js
+- rx.js
+- chart.js
+- bootstrap
+- sass
