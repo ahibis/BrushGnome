@@ -1,29 +1,46 @@
-### для запуска проекта 
-1. в терминале прописать npm i (yarn)
-2. npm run dev(yarn dev) запуск в браузере
-3. npm run electron:dev(yarn electron:dev) запуск в приложении
-## сайт
-[перейти на сайт](https://ahibis.github.io/image-editor/)
-![картинка](/github/edit.jpg)
-## режимы
-накладывает последовательно слой на слой
-- сумма - сумма 2 пикселей
-- среднее - среднее между 2 пикселями
-- произведение - произведение между 2 пикселями /255
-- максимум - максимум между 2 пикселями
-- минимум - минимум между 2 пикселями
-- маска - все прозрачные пиксели маски убирают пиксели на картинке до этого
-- наложение - обычное наложение 
-## канал
-выбирает канал отображаемый программой
+# BrashGnome
+the app for redaction images on web and windows.
+![picture](/github/edit1.jpg)
+## [website](https://ahibis.github.io/image-editor/)
+## old versions
+[0.1.0](v0.1.0.md)
+# interface
+## layers
+menu for layer choose
+![layers](/github/layers.png)
+## params
+![params](/github/params.jpg)
+## Roadmap
+- [x] params for editing and transform image
+- [x] use GPU to render images
+- [x] windows version
+- [ ] gradient transformation
+- [ ] mobile version
+- [ ] dark mode
+- [ ] i18n
+- [ ] mask filter
+- [ ] other filters
 
+### launch project
+1. download node 14+
+2. npm i
+3. npm run dev
+## Scripts 
+- yarn dev - launch dev version on browser
+- yarn electron:dev - launch dev version on windows app 
+- yarn electron - launch windows app 
+- yarn build - build web project
+- yarn build:docs - build web project for github pages
+- yarn app:build - compile windows app
 
-## используемые технологии
-- vue
+## Technologies used 
+- vue 3
 - vite
 - electron.js
 - lodash.js
-- rx.js
-- chart.js
+- vue chartjs
 - bootstrap
+- vuetify
+- pixi.js
+- GPU.js
 - sass
