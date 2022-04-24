@@ -1,15 +1,14 @@
 # BrashGnome
 the app for redaction images on web and windows.
+### [LINK TO WEBSITE](https://ahibis.github.io/image-editor/)
 ![picture](/github/edit1.jpg)
-## [website](https://ahibis.github.io/image-editor/)
-## old versions
-[0.1.0](v0.1.0.md)
-# interface
+### Old versions
+* [0.1.0](https://github.com/ahibis/image-editor/tree/v0.1.0)
 ## layers
 menu for layer choose
 ![layers](/github/layers.png)
 ## params
-![params](/github/params.jpg)
+![params](/github/params.png)
 ## Roadmap
 - [x] params for editing and transform image
 - [x] use GPU to render images
@@ -21,7 +20,7 @@ menu for layer choose
 - [ ] mask filter
 - [ ] other filters
 
-### launch project
+### Launch project
 1. download node 14+
 2. npm i
 3. npm run dev
