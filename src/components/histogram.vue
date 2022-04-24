@@ -66,16 +66,27 @@ const chartData = computed((v) => {
   return {
     labels: _.range(256),
     datasets: [
-      { data: props.data[0], borderColor: "#F44336",label:"red" },
-      { data: props.data[1], borderColor: "#4CAF50",label:"green" },
-      { data: props.data[2], borderColor: "#2196F3",label:"blue" },
-      { data: props.data[3].map(e=>~~(e/4)), borderColor: "#3F51B5",label:"rgb" }
-      ],
+      { data: props.data[0], borderColor: "#F44336", label: "red" },
+      { data: props.data[1], borderColor: "#4CAF50", label: "green" },
+      { data: props.data[2], borderColor: "#2196F3", label: "blue" },
+      {
+        data: props.data[3].map((e) => ~~(e / 4)),
+        borderColor: "#3F51B5",
+        label: "rgb",
+      },
+    ],
   };
 });
 
 const chartOptions = reactive({
   responsive: true,
+  scales: {
+    yAxes: [
+      {
+        type: "logarithmic",
+      },
+    ],
+  },
 });
 </script>
 <template>
