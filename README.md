@@ -1,4 +1,4 @@
-# BrashGnome
+# BrushGnome
 the app for redaction images on web and windows.
 ### [LINK TO WEBSITE](https://ahibis.github.io/image-editor/)
 ![picture](/github/edit1.jpg)
