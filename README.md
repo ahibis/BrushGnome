@@ -6,6 +6,7 @@ the app for redaction images on web and windows.
 * [0.1.0](https://github.com/ahibis/image-editor/tree/v0.1.0)
 ## layers
 menu for layer choose
+
 ![layers](/github/layers.png)
 ## params
 ![params](/github/params.png)
