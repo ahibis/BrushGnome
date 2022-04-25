@@ -1,14 +1,16 @@
 <script setup>
-import { ref } from "@vue/reactivity";
-
-let { sprites, selectedSprite } = defineProps(["sprites", "selectedSprite"]);
-defineEmits(["selectSprite"]);
-let select = ref(selectedSprite);
+import { ref, toRef, toRefs } from "@vue/reactivity";
+const props = defineProps(["sprites", "selectedSprite"])
+const { sprites, selectedSprite } = props;
+const emit = defineEmits(["selectSprite"]);
+//const Sprite = toRef(props,"selectedSprite");
+//let select = toRef(selectedSprite);
 function deleteImg(i) {
   const [sprite] = sprites.splice(i, 1);
   const { room } = engine;
   room.children = room.children.filter((e) => e.id != sprite.id);
 }
+
 function addSprite(e) {
   const el = document.createElement("input");
   el.type ="file";
@@ -24,6 +26,10 @@ function addSprite(e) {
   }
   el.click()
 }
+function select(sprite){
+  props.selectedSprite=sprite
+  //sprites.value=[]
+}
 </script>
 
 <template>
@@ -31,13 +37,13 @@ function addSprite(e) {
   <v-card
     v-for="(sprite, i) in sprites"
     :key="i"
-    @click="$emit('selectSprite', sprite)"
+    @click="$emit('selectSprite',sprite)"
   >
     <v-card-text>
       <v-row align="center">
         <template v-if="sprite.texture">
           <v-col cols="2" sm="3">
-            <v-img :src="sprite.texture.textureCacheIds[0]" />
+            <img :src="sprite.texture.textureCacheIds[0]" style="width:100%" />
           </v-col>
           <v-col cols="8" sm="6">
             {{ sprite.Name }}

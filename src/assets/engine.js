@@ -1,3 +1,6 @@
+async function srcToImg(src){
+
+}
 export class Text {
   constructor(text = "", x = 0, y = 0) {
     //this.fillStyle = "#263871";
@@ -67,6 +70,14 @@ export class Img extends PIXI.Sprite {
   set b(v) {
     this.tint = (v % 256) + (0xffff00 & this.tint);
   }
+  pixels(){
+    const src = this.texture.textureCacheIds[0]
+    const img = new Img();
+    img.src = src;
+    img.onload = function(){
+
+    }
+  }
 }
 export class Engine {
   sprites = [];
@@ -106,6 +117,15 @@ export class Engine {
     });
     this.ctx = this.view.getContext("webgl2");
     el.appendChild(app.view);
+  }
+  loadImg(src) {
+    return new Promise((resolve, reject) => {
+      let img = new Image();
+      img.src = src;
+      img.onload = (data) => {
+        resolve(img);
+      };
+    });
   }
   pixels(){
     return this.extract.pixels(this.app.stage);

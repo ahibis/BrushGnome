@@ -1,7 +1,8 @@
 <script setup>
 import { reactive, ref } from "@vue/reactivity";
-import Params from "./windows/params.vue";
-import GradientTransformation from "./windows/gradientTransformation.vue";
+import Params from "./sprites/params.vue";
+import GradientTransformation from "./sprites/gradientTransformation.vue";
+import GradientTransformationOld from "./sprites/gradientTransformationOld.vue";
 
 let { selectedSprite } = defineProps(["selectedSprite"]);
 const window = ref(0);
@@ -10,12 +11,15 @@ const windows = reactive([
     title: "params",
     value: 0,
   },
-  // {
-  //   title: "gradient transformations",
-  //   value: 1,
-  // },
+  {
+    title: "gradient transformations",
+    value: 1,
+  },
+  {
+    title: "gradient transformations faster",
+    value: 2,
+  },
 ]);
-
 </script>
 
 <template>
@@ -31,9 +35,16 @@ const windows = reactive([
         </v-col>
       </v-row>
       <v-select label="window" :items="windows" v-model="window" hide-details />
-      <v-divider style="margin:10px 0px"/>
-      <params v-if="window==0" :selectedSprite="selectedSprite"/>
-      <gradient-transformation v-else-if="window==1" :selectedSprite="selectedSprite"/>
+      <v-divider style="margin: 10px 0px" />
+      <params v-if="window == 0" :selectedSprite="selectedSprite" />
+      <gradient-transformation
+        v-else-if="window == 1"
+        :selectedSprite="selectedSprite"
+      />
+      <gradient-transformation-old
+        v-else-if="window == 2"
+        :selectedSprite="selectedSprite"
+      />
     </v-card-text>
   </v-card>
 </template>

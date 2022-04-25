@@ -1,15 +1,7 @@
 <script setup>
-import { Line } from "vue-chartjs";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  LinearScale,
-  PointElement,
-  CategoryScale,
-} from "chart.js";
+import { Line,Bar } from "vue-chartjs";
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement,PointElement, CategoryScale, LinearScale, LineElement } from 'chart.js'
+
 import { reactive, ref, toRef, toRefs } from "@vue/reactivity";
 import { computed, watch } from "@vue/runtime-core";
 
@@ -20,7 +12,10 @@ ChartJS.register(
   LineElement,
   LinearScale,
   PointElement,
-  CategoryScale
+  CategoryScale,
+  BarElement, 
+  LineElement,
+  PointElement
 );
 
 const props = defineProps({
@@ -66,31 +61,24 @@ const chartData = computed((v) => {
   return {
     labels: _.range(256),
     datasets: [
-      { data: props.data[0], borderColor: "#F44336", label: "red" },
-      { data: props.data[1], borderColor: "#4CAF50", label: "green" },
-      { data: props.data[2], borderColor: "#2196F3", label: "blue" },
+      { data: props.data[0], backgroundColor: "#F44336", label: "red" },
+      { data: props.data[1], backgroundColor: "#4CAF50", label: "green" },
+      { data: props.data[2], backgroundColor: "#2196F3", label: "blue" },
       {
         data: props.data[3].map((e) => ~~(e / 4)),
-        borderColor: "#3F51B5",
-        label: "rgb",
+        backgroundColor: "	#C0C0C0",
+        label: "multiply",
       },
     ],
   };
 });
 
 const chartOptions = reactive({
-  responsive: true,
-  scales: {
-    yAxes: [
-      {
-        type: "logarithmic",
-      },
-    ],
-  },
+  responsive: true
 });
 </script>
 <template>
-  <Line
+  <Bar
     :chart-options="chartOptions"
     :chart-data="chartData"
     :chart-id="chartId"

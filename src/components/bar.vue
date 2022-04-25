@@ -1,32 +1,33 @@
 <script setup>
 import { reactive } from "@vue/reactivity";
-
+const emit = defineEmits("switchDrawer")
 function download() {
   engine.downImg();
 }
 
-const emit = defineEmits(["drawHistogram"])
 const options = reactive([
-  { title: "download", func: download },
-  { title: "draw histogram", func: ()=>emit("drawHistogram")},
+  { title: "download", func: download }
 ]);
 function run(item) {
   if(item.func){
     item.func()
   }
 }
+function Switch(){
+  emit("switchDrawer")
+}
 </script>
 
 <template>
   <v-app-bar extension-height="40">
     <template v-slot:prepend>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="Switch"></v-app-bar-nav-icon>
     </template>
 
     <v-app-bar-title>
       <v-menu>
-        <template v-slot:activator="{ props }">
-          <v-btn color="primary" v-bind="props"> options </v-btn>
+        <template v-slot:activator="{ props }" >
+          <v-btn color="primary" v-bind="props" > options </v-btn>
         </template>
         <v-list>
           <v-list-item
@@ -45,4 +46,5 @@ function run(item) {
       <!-- <v-btn icon="mdi-dots-vertical"></v-btn> -->
     </template>
   </v-app-bar>
+  
 </template>

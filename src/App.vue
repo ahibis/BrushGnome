@@ -6,23 +6,24 @@ import spriteEdit from "@/components/spriteEdit.vue";
 import spriteList from "@/components/spriteList.vue";
 import LayerEdit from "@/components/layerEdit.vue";
 import bar from "@/components/bar.vue";
-import Histogram from "./components/histogram.vue";
-const zeroes = _.map(_.range(256), (e) => 0);
+import Histogram from "./components/gui/histogram.vue";
+
 export default {
   components: { spriteList, spriteEdit, LayerEdit, bar, Histogram },
   data() {
     return {
       imgs: [],
       selectedSprite: undefined,
-      histogramData: [zeroes, zeroes, zeroes, zeroes],
+      drawer: false,
     };
   },
   methods: {
     selectSprite(sprite) {
       this.selectedSprite = sprite;
+      this.drawer = false;
     },
-    drawHistogram() {
-      this.histogramData = engine.histogram();
+    switchDrawer() {
+      this.drawer = !!(1 - this.drawer);
     },
   },
   mounted() {
@@ -35,15 +36,18 @@ export default {
 
 <template>
   <v-app>
-    <bar @drawHistogram="drawHistogram" />
+    <bar @switchDrawer="switchDrawer" />
+    <v-navigation-drawer v-model="drawer" absolute bottom temporary>
+      <sprite-list
+        :sprites="imgs"
+        @selectSprite="selectSprite"
+        :selectedSprite="selectedSprite"
+      />
+    </v-navigation-drawer>
     <v-main>
       <v-row>
         <v-col sm="8">
           <div id="window"></div>
-          <v-col md="8">
-            <histogram :data="histogramData" />
-          </v-col>
-          
         </v-col>
         <v-col sm="4">
           <layer-edit
