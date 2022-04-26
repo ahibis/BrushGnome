@@ -4,21 +4,26 @@ the app for redaction images on web and windows.
 ![picture](/github/edit1.jpg)
 ### Old versions
 * [0.1.0](https://github.com/ahibis/image-editor/tree/v0.1.0)
-## layers
-menu for layer choose
+* [0.2.0](https://github.com/ahibis/image-editor/tree/v0.2.0)
+* [0.2.3](https://github.com/ahibis/image-editor/tree/v0.2.0)
+## Layers
+Menu for layer choose
 
 ![layers](/github/layers.png)
-## params
+## Params
 ![params](/github/params.png)
 ## Roadmap
 - [x] params for editing and transform image
 - [x] use GPU to render images
 - [x] windows version
-- [ ] gradient transformation
+- [x] gradient transformation
+- [x] mask filter
+- [ ] binarization
+- [ ] spatial filtering
+- [ ] Frequency Filter 
 - [ ] mobile version
 - [ ] dark mode
 - [ ] i18n
-- [ ] mask filter
 - [ ] other filters
 
 ### Launch project
