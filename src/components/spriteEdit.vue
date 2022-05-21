@@ -3,6 +3,8 @@ import { reactive, ref } from "@vue/reactivity";
 import Params from "./sprites/params.vue";
 import GradientTransformation from "./sprites/gradientTransformation.vue";
 import GradientTransformationOld from "./sprites/gradientTransformationOld.vue";
+import MaskFiltration from "./sprites/maskFiltration.vue";
+import Binarization from "./sprites/binarization.vue";
 
 let { selectedSprite } = defineProps(["selectedSprite"]);
 const window = ref(0);
@@ -18,6 +20,14 @@ const windows = reactive([
   {
     title: "gradient transformations faster",
     value: 2,
+  },
+  {
+    title: "mask filtration",
+    value: 3,
+  },
+  {
+    title: "Binarization",
+    value: 4,
   },
 ]);
 </script>
@@ -44,6 +54,14 @@ const windows = reactive([
       <gradient-transformation-old
         v-else-if="window == 2"
         :selectedSprite="selectedSprite"
+      />
+      <mask-filtration
+      v-else-if="window == 3"
+      :selectedSprite="selectedSprite"
+      />
+      <binarization 
+      v-else-if="window == 4"
+      :selectedSprite="selectedSprite"
       />
     </v-card-text>
   </v-card>

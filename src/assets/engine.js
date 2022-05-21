@@ -105,10 +105,10 @@ export class Engine {
 
     const { stage } = app;
     this.stage = stage;
-    const room = new Container();
+    const room = stage;
     room.Name = "Main layer";
     room.id = 0;
-    stage.addChild(room);
+    //stage.addChild(room);
     this.room = room;
     imgs.push({
       Name: "Main layer",
@@ -117,6 +117,15 @@ export class Engine {
     });
     this.ctx = this.view.getContext("webgl2");
     el.appendChild(app.view);
+  }
+  async loadPixels(img) {
+    let { width: w, height: h } = img;
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, w, h);
+    return await ctx.getImageData(0, 0, w, h).data;
   }
   loadImg(src) {
     return new Promise((resolve, reject) => {

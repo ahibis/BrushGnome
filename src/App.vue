@@ -49,7 +49,7 @@ export default {
         <v-col sm="8">
           <div id="window"></div>
         </v-col>
-        <v-col sm="4">
+        <v-col sm="4" style="height:89vh;overflow-y:auto">
           <layer-edit
             :selectedSprite="selectedSprite"
             v-if="selectedSprite?.type == 'layer'"

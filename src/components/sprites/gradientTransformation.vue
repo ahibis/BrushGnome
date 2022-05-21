@@ -26,7 +26,6 @@ const isGPU = ref(false);
 const time = ref(0);
 let Canvas;
 onMounted(async (e) => {
-  const spline = $("#spline");
   const src = selectedSprite.texture.baseTexture.cacheId;
   const img = await engine.loadImg(src);
   const pixels = await loadPixels(img);
@@ -35,7 +34,7 @@ onMounted(async (e) => {
   Canvas.width = width;
   Canvas.height = height;
   Canvas.style.width = "100%";
-  const ctx = Canvas.getContext("2d");
+  const Ctx = Canvas.getContext("2d");
   let res = _.map(_.range(256), (e) => 0);
   const gpu = new GPU();
   const { length } = pixels;
@@ -47,12 +46,6 @@ onMounted(async (e) => {
     },
     { output: [length], graphical: false }
   );
-  spline.splineEditor({
-    initialKnots: [
-      [50, 50],
-      [100, 100],
-    ],
-  });
   function cpuHandler(pixels, list) {
     const newPixels = new Float32Array(pixels.length);
     for (let i = 0; i < pixels.length; i += 1) {
@@ -64,8 +57,8 @@ onMounted(async (e) => {
   }
   function update() {
     for (let i = 0; i < 256; i += 1) {
-      let a = spline.splineEditor("getY", i);
-      res[i] = 255 - Math.floor(a);
+      let a = newton.get(i);
+      res[i] = Math.floor(a);
     }
     let newPixels;
     if (isGPU.value) {
@@ -78,29 +71,36 @@ onMounted(async (e) => {
       width,
       height
     );
-    ctx.putImageData(image, 0, 0);
+    Ctx.putImageData(image, 0, 0);
     histogramData.value = engine.pixelsToHistogram(newPixels);
   }
   let Time;
-  Time=timer(update);
-  time.value = Time.dt
-  spline.mousemove(function (e) {
-    if (!e.which) return;
+  
+  const spline = document.getElementById("Spline");
+  const newton = new Newton(
+    [[0,0],[255,255]],
+    spline
+  )
+  newton.onUpdate = ()=>{
     Time=timer(update);
     time.value = Time.dt
-  });
+  }
+  Time=timer(update);
+  time.value = Time.dt
 
 });
 function savePicture(){
   let src = Canvas.toDataURL()
-  let image = new Image
-  selectedSprite.texture.baseTexture = new PIXI.BaseTexture(Canvas);
+
+  const texture = PIXI.Texture.from(src);
+  selectedSprite.texture = texture
+  //selectedSprite.texture.baseTexture = new PIXI.BaseTexture(Canvas);
 }
 </script>
 
 <template>
   <v-row justify="center">
-    <div id="spline" style="width: 255px; height: 255px"></div>
+    <canvas id="Spline" width="256" height="256" style="width: 100%"></canvas>
     <canvas id="cnv" />
   </v-row>
   <Histogram :data="histogramData" />
