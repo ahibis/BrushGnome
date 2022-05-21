@@ -108,7 +108,7 @@ const types = reactive([
 
 </script>
 <template>
-  <v-select @update:modelValue="updateMethod" label="methods" :items="types" value="method" />
+  <v-select @update:modelValue="updateMethod" label="methods" :items="types" v-model="method" />
   <v-row justify="center">
     <canvas id="cnv" />
   </v-row>

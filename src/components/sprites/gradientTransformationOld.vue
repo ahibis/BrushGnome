@@ -7,9 +7,12 @@ import histogram from "../gui/histogram.vue";
 const { selectedSprite } = defineProps(["selectedSprite"]);
 let Canvas;
 const histogramData = ref([0,0,0,0])
+let img;
+let kernel;
+let newPixels;
 onMounted(async e => {
   const src = selectedSprite.texture.textureCacheIds[0]
-  const img = await engine.loadImg(src)
+  img = await engine.loadImg(src)
   Canvas = document.getElementById("cnv")
   Canvas.width = 640;
   Canvas.height = 640;
@@ -23,7 +26,7 @@ onMounted(async e => {
   });
   let w = 640;
   let h = 640;
-  let kernel = gpu.createKernel(
+  kernel = gpu.createKernel(
     function (image, list) {
       const pixel = image[this.thread.y][this.thread.x];
       this.color(list[Math.floor(pixel[0] * 256)], list[Math.floor(pixel[1] * 256)], list[Math.floor(pixel[2] * 256)], pixel[3]);
@@ -41,20 +44,32 @@ onMounted(async e => {
     let t2 = new Date().getTime();
     //console.log(res);
     kernel(img, res);
-    //histogramData.value = engine.pixelsToHistogram(kernel.getPixels())
+    newPixels = kernel.getPixels()
+    //histogramData.value = engine.pixelsToHistogram()
   }
   const spline = document.getElementById("newSpline");
   const newton = new Newton(
-    [[0,0],[255,255],[128,100]],
+    [[0,0],[256,256],[128,100]],
     spline
   )
   newton.onUpdate = update
   update()
 });
 function savePicture() {
-  let src = Canvas.toDataURL()
-  let image = new Image
-  selectedSprite.texture.baseTexture = new PIXI.BaseTexture(Canvas);
+  const {width,height} = img;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  const image = new ImageData(
+      new Uint8ClampedArray(newPixels),
+      width,
+      height
+    );
+  ctx.putImageData(image, 0, 0);
+
+  let src = canvas.toDataURL()
+  selectedSprite.texture.baseTexture = new PIXI.BaseTexture(src);
 }
 </script>
 

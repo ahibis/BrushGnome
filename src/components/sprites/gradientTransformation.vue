@@ -78,7 +78,7 @@ onMounted(async (e) => {
   
   const spline = document.getElementById("Spline");
   const newton = new Newton(
-    [[0,0],[255,255]],
+    [[0,0],[256,256]],
     spline
   )
   newton.onUpdate = ()=>{
