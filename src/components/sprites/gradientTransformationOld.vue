@@ -1,8 +1,12 @@
 
 <script setup>
 import { onMounted } from "@vue/runtime-core";
+import { ref } from "vue";
+import histogram from "../gui/histogram.vue";
+//import histogramNew from "../gui/histogramNew.vue";
 const { selectedSprite } = defineProps(["selectedSprite"]);
 let Canvas;
+const histogramData = ref([0,0,0,0])
 onMounted(async e => {
   const src = selectedSprite.texture.textureCacheIds[0]
   const img = await engine.loadImg(src)
@@ -19,7 +23,7 @@ onMounted(async e => {
   });
   let w = 640;
   let h = 640;
-  let kernal = gpu.createKernel(
+  let kernel = gpu.createKernel(
     function (image, list) {
       const pixel = image[this.thread.y][this.thread.x];
       this.color(list[Math.floor(pixel[0] * 256)], list[Math.floor(pixel[1] * 256)], list[Math.floor(pixel[2] * 256)], pixel[3]);
@@ -36,7 +40,8 @@ onMounted(async e => {
     }
     let t2 = new Date().getTime();
     //console.log(res);
-    kernal(img, res);
+    kernel(img, res);
+    //histogramData.value = engine.pixelsToHistogram(kernel.getPixels())
   }
   const spline = document.getElementById("newSpline");
   const newton = new Newton(
@@ -58,6 +63,8 @@ function savePicture() {
     <canvas id="newSpline" width="256" height="256" style="width: 100%"></canvas>
     <canvas id="cnv" style="width: 100%" />
   </v-row>
+  <!-- <histogram :data="histogramData" /> -->
+  
   <v-btn icon color="primary" @click="savePicture()">
     <v-icon>mdi-content-save</v-icon>
   </v-btn>
