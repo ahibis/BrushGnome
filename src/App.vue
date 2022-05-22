@@ -26,7 +26,7 @@ onMounted(() => {
     </v-navigation-drawer>
     <v-main>
       <v-row>
-        <v-col :sm="isEditor || isList?8:12">
+        <v-col :sm="isEditor || isList?8:12" cols="12">
           <div id="window"></div>
         </v-col>
         <v-col sm="4" style="height:96vh;overflow-y:auto" v-if="isEditor || isList">

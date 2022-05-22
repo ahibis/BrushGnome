@@ -16,7 +16,7 @@ class Newton {
         const {clientWidth:cw,clientHeight:ch,width:w,height:h} = canvas
         return [x*w/cw,(1-y/ch)*h]
       }
-      canvas.addEventListener("mousedown",({offsetX:mouseX,offsetY:mouseY})=>{
+      canvas.addEventListener("pointerdown",({offsetX:mouseX,offsetY:mouseY})=>{
         [mouseX,mouseY] = toNormalCords(mouseX,mouseY)
         console.log(1)
         this.dots.forEach(([x,y],i)=>{
@@ -34,10 +34,10 @@ class Newton {
           }
         }
       })
-      canvas.addEventListener("mouseup",()=>{
+      canvas.addEventListener("pointerup",()=>{
         dot = -1;
       })
-      canvas.addEventListener("mousemove",({offsetX:mouseX,offsetY:mouseY})=>{
+      canvas.addEventListener("pointermove",({offsetX:mouseX,offsetY:mouseY})=>{
         if(dot!=-1){
           [mouseX,mouseY] = toNormalCords(mouseX,mouseY)
           this.dots[dot] = [mouseX, mouseY]
