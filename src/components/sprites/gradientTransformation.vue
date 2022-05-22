@@ -1,7 +1,8 @@
 <script setup>
 import Histogram from "../gui/histogram.vue";
 import { onMounted, ref } from "@vue/runtime-core";
-const { selectedSprite } = defineProps(["selectedSprite"]);
+import {useGameStore} from "@/store/game-store"
+const {selectedSprite} = useGameStore();
 function timer(func, ...args) {
   let t1 = new Date().getTime();
   let res = func(...args);
@@ -25,12 +26,14 @@ const histogramData = ref([zeroes, zeroes, zeroes, zeroes]);
 const isGPU = ref(false);
 const time = ref(0);
 let Canvas;
+const splineRef = ref()
+const cnvRef = ref()
 onMounted(async (e) => {
   const src = selectedSprite.texture.baseTexture.cacheId;
   const img = await engine.loadImg(src);
   const pixels = await loadPixels(img);
   const { width, height } = img;
-  Canvas = document.getElementById("cnv");
+  Canvas = cnvRef.value;
   Canvas.width = width;
   Canvas.height = height;
   Canvas.style.width = "100%";
@@ -76,7 +79,7 @@ onMounted(async (e) => {
   }
   let Time;
   
-  const spline = document.getElementById("Spline");
+  const spline = splineRef.value;
   const newton = new Newton(
     [[0,0],[256,256]],
     spline
@@ -100,8 +103,8 @@ function savePicture(){
 
 <template>
   <v-row justify="center">
-    <canvas id="Spline" width="256" height="256" style="width: 100%"></canvas>
-    <canvas id="cnv" />
+    <canvas ref="splineRef" width="256" height="256" style="width: 100%"></canvas>
+    <canvas ref="cnvRef" />
   </v-row>
   <Histogram :data="histogramData" />
   computed time {{time}}

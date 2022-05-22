@@ -1,11 +1,31 @@
 <script setup>
 import { onMounted } from "@vue/runtime-core";
-import { ref, reactive } from "vue";
-const { selectedSprite } = defineProps(["selectedSprite"]);
-const src = selectedSprite.texture.textureCacheIds[0]
+import { ref, reactive,watch, toRef} from "vue";
+import {useGameStore} from "@/store/game-store"
+const gameStore = useGameStore()
+const selectedSprite = toRef(gameStore, "selectedSprite");
+
+
+let src;
 let img;
 let pixels;
 let Canvas;
+const cnv = ref()
+async function spriteUpdate(e){
+  src = selectedSprite.value.texture.textureCacheIds[0];
+  img = await engine.loadImg(src)
+  pixels = await engine.loadPixels(img)
+  const { width, height } = img;
+  Canvas = cnv.value;
+  Canvas.width = width;
+  Canvas.height = height;
+  Canvas.style.width = "100%";
+  updateMethod(0)
+}
+watch(selectedSprite,spriteUpdate)
+onMounted(spriteUpdate)
+  
+
 function gavrilov() {
   let { width: w, height: h } = img;
   let sum = 0;
@@ -84,16 +104,8 @@ function updateMethod(v) {
   );
   Ctx.putImageData(image, 0, 0);
 }
-onMounted(async e => {
-  img = await engine.loadImg(src)
-  pixels = await engine.loadPixels(img)
-  const { width, height } = img;
-  Canvas = document.getElementById("cnv");
-  Canvas.width = width;
-  Canvas.height = height;
-  Canvas.style.width = "100%";
-  updateMethod(0)
-})
+
+
 const method = ref(0)
 const types = reactive([
   {
@@ -110,6 +122,6 @@ const types = reactive([
 <template>
   <v-select @update:modelValue="updateMethod" label="methods" :items="types" v-model="method" />
   <v-row justify="center">
-    <canvas id="cnv" />
+    <canvas ref="cnv" />
   </v-row>
 </template>

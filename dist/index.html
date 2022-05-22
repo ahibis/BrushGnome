@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="overflow-y: hidden;">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="./favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="chart.js"></script>
     <script src="lodash.js"></script>
     <script src="gpu-browser.min.js"></script>
-    <script src="pixi.min.js"></script>
+    <script src="pixi.min.js"></script> 
+    
+    <script src="newton.js"></script>
     <!-- <script src="pixi-extract.js"></script> -->
     <title>Scoi</title>
-    <script type="module" crossorigin src="./assets/index.bb6f1968.js"></script>
-    <link rel="modulepreload" href="./assets/vendor.254d6a6a.js">
-    <link rel="stylesheet" href="./assets/vendor.8d4900b1.css">
-    <link rel="stylesheet" href="./assets/index.c05c2432.css">
+    
+    <script type="module" crossorigin src="./assets/index.c4fdb1c6.js"></script>
+    <link rel="modulepreload" href="./assets/vendor.c706f790.js">
+    <link rel="stylesheet" href="./assets/vendor.879818f8.css">
+    <link rel="stylesheet" href="./assets/index.3e24c4d0.css">
   </head>
-  <body>
+  <body scroll="no">
     <div id="app"></div>
     
     <script>
@@ -24,7 +26,8 @@
       let vm;
       let test;
       let engine
-      let pixels
+      let pixels;
+      let Bezier;
     </script>
     
   </body>

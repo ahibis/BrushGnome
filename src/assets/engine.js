@@ -1,3 +1,5 @@
+import { toHandlers } from "vue";
+
 async function srcToImg(src){
 
 }
@@ -35,7 +37,7 @@ export class Container extends PIXI.Container {
     this.tint = color;
   }
   get g() {
-    return (this.tint & 0x00ff00) / 0x100;
+    return (this.tint & 0x00ff00) /  0x100;
   }
   set g(v) {
     this.tint = (v % 256) * 0x100 + (0xff00ff & this.tint);
@@ -47,9 +49,86 @@ export class Container extends PIXI.Container {
     this.tint = (v % 256) + (0xffff00 & this.tint);
   }
 }
+let app;
 export class Img extends PIXI.Sprite {
   Name = "picture";
   type = "sprite";
+  constructor(...args){
+    super(...args)
+    this.eventsBind()
+  }
+  eventsBind(){
+    this.interactive = true;
+    this.buttonMode = true
+    let shift;
+    let type=0
+    let widthStart;
+    let heightStart;
+    let oldPos;
+    let target;
+    const padding = 10
+    setTimeout(()=>{
+      if(this.width>800) this.width = 800
+      this.scale.y = this.scale.x
+    },50)
+    this.on("pointerdown",e=>{
+      shift = e.data.getLocalPosition(this)
+      shift.x*= this.scale.x
+      shift.y*= this.scale.y
+      oldPos = e.data.getLocalPosition(this.parent)
+      const {width, height} = this;
+      this.zIndexOld= this.zIndex;
+      target = this;
+      if(!this.zIndex) this.zIndex=0;
+      this.zIndex = 100;
+      console.log(this.zIndex)
+      widthStart = width
+      heightStart = height
+      if(shift.x > width - padding) {
+        return type=1
+      }
+      if(shift.x < padding) {
+        return type=2
+      }
+      if(shift.y > height - padding) {
+        return type=3
+      }
+      if(shift.y < padding) {
+        return type=4
+      }
+      type=0
+    })
+    app.stage.on("pointerup",e=>{
+      if(target) target.zIndex = target.zIndexOld
+      shift = false
+    })
+    this.on("pointermove",e=>{
+      const {ctrlKey} = e.data.originalEvent
+      if(shift){
+        const newPos = e.data.getLocalPosition(this.parent)
+        if(type==0){
+          this.x = newPos.x - shift.x
+          this.y = newPos.y - shift.y
+        }
+        if(type==1){
+          this.width = widthStart + newPos.x - oldPos.x
+          if(ctrlKey) this.scale.y = this.scale.x
+        }
+        if(type==2){
+          this.x = newPos.x - shift.x
+          this.width = widthStart - newPos.x + oldPos.x
+        }
+        if(type==3){
+          this.height = heightStart + newPos.y - oldPos.y
+          if(ctrlKey) this.scale.x = this.scale.y
+        }
+        if(type==4){
+          this.y = newPos.y - shift.y
+          this.height = heightStart - newPos.y + oldPos.y
+        }
+      }
+    })
+  }
   get r() {
     let color = (this.tint & 0xff0000) / 0x10000;
     return (this.tint & 0xff0000) / 0x10000;
@@ -92,7 +171,7 @@ export class Engine {
   _sprites = 0;
   constructor(el, imgs) {
     this.sprites = imgs;
-    const app = new PIXI.Application({
+    app = new PIXI.Application({
       width: this.width,
       height: this.height,
       transparent: true,
@@ -104,8 +183,11 @@ export class Engine {
     this.view = app.view;
 
     const { stage } = app;
+    stage.interactive = true;
+    stage.buttonMode = true
     this.stage = stage;
     const room = stage;
+    room.sortableChildren = true
     room.Name = "Main layer";
     room.id = 0;
     //stage.addChild(room);
@@ -175,5 +257,6 @@ export class Engine {
     sprite.id = this._sprites;
     sprites.push(sprite);
     room.addChild(sprite);
+    return sprite
   }
 }

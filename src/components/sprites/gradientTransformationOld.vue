@@ -2,20 +2,23 @@
 <script setup>
 import { onMounted } from "@vue/runtime-core";
 import { ref } from "vue";
-import histogram from "../gui/histogram.vue";
-//import histogramNew from "../gui/histogramNew.vue";
-const { selectedSprite } = defineProps(["selectedSprite"]);
+
+import {useGameStore} from "@/store/game-store"
+const {selectedSprite} = useGameStore();
 let Canvas;
 const histogramData = ref([0,0,0,0])
 let img;
 let kernel;
 let newPixels;
+const cnvRef = ref();
+const splineRef = ref();
 onMounted(async e => {
   const src = selectedSprite.texture.textureCacheIds[0]
   img = await engine.loadImg(src)
-  Canvas = document.getElementById("cnv")
-  Canvas.width = 640;
-  Canvas.height = 640;
+  const {width,height} = img;
+  Canvas = cnvRef.value
+  Canvas.width = width;
+  Canvas.height = height;
   Canvas.style.width = "100%";
 
   const gl = Canvas.getContext("webgl2", { premultipliedAlpha: false });
@@ -24,15 +27,13 @@ onMounted(async e => {
     canvas: Canvas,
     context: gl,
   });
-  let w = 640;
-  let h = 640;
   kernel = gpu.createKernel(
     function (image, list) {
       const pixel = image[this.thread.y][this.thread.x];
       this.color(list[Math.floor(pixel[0] * 256)], list[Math.floor(pixel[1] * 256)], list[Math.floor(pixel[2] * 256)], pixel[3]);
 
     },
-    { output: [w, h], graphical: true }
+    { output: [width, height], graphical: true }
   );
   let res = _.map(_.range(256), (e) => 0);
   function update() {
@@ -47,7 +48,7 @@ onMounted(async e => {
     newPixels = kernel.getPixels()
     //histogramData.value = engine.pixelsToHistogram()
   }
-  const spline = document.getElementById("newSpline");
+  const spline = splineRef.value;
   const newton = new Newton(
     [[0,0],[256,256],[128,100]],
     spline
@@ -75,8 +76,8 @@ function savePicture() {
 
 <template>
   <v-row justify="center">
-    <canvas id="newSpline" width="256" height="256" style="width: 100%"></canvas>
-    <canvas id="cnv" style="width: 100%" />
+    <canvas ref="splineRef" width="256" height="256" style="width: 100%"></canvas>
+    <canvas ref="cnvRef" style="width: 100%" />
   </v-row>
   <!-- <histogram :data="histogramData" /> -->
   

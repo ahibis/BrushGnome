@@ -1,7 +1,11 @@
 <script setup>
-import { ref } from "@vue/reactivity";
+import { ref, toRef } from "@vue/reactivity";
+import {useGameStore} from "@/store/game-store"
+import { watch } from "vue";
+const gameStore = useGameStore()
+const selectedSprite = toRef(gameStore, "selectedSprite");
 
-const { selectedSprite } = defineProps(["selectedSprite"]);
+
 const fragment = `
       varying vec2 vTextureCoord;
       uniform sampler2D uSampler;
@@ -28,18 +32,27 @@ const fragment = `
         gl_FragColor = color  ;
       }
       `;
-const myFilter = new PIXI.Filter(null, fragment, {
-  m1: [0, 0, 0],
-  m2: [0, 1, 0],
-  m3: [0, 0, 0],
-  size: 1,
-  test: new Float32Array([1, 2, 3, 4, 5]),
-});
-selectedSprite.filters = [myFilter];
+
+let myFilter;
+let Filter = ref();
+function spriteUpdate(){
+  myFilter = new PIXI.Filter(null, fragment, {
+    m1: [0, 0, 0],
+    m2: [0, 1, 0],
+    m3: [0, 0, 0],
+    size: 1,
+    test: new Float32Array([1, 2, 3, 4, 5]),
+  })
+  selectedSprite.value.filters = [myFilter];
+  Filter.value = myFilter.uniforms
+}
+spriteUpdate()
+watch(selectedSprite ,spriteUpdate)
+
 function sizeUpdate(e) {
   Filter.filters[0].uniforms.size = +this.size;
 }
-const Filter = ref(selectedSprite.filters[0].uniforms);
+
 </script>
 
 <template>

@@ -1,10 +1,15 @@
 <script setup>
 import { ref, toRef, toRefs } from "@vue/reactivity";
-const props = defineProps(["sprites", "selectedSprite"])
-const { sprites, selectedSprite } = props;
-const emit = defineEmits(["selectSprite"]);
-//const Sprite = toRef(props,"selectedSprite");
-//let select = toRef(selectedSprite);
+import {useGameStore} from "@/store/game-store"
+const gameStore = useGameStore()
+const {sprites} = gameStore;
+const {drawer} = toRefs(gameStore);
+
+function selectSprite(sprite) {
+  gameStore.selectedSprite= sprite;
+  drawer.value = false;
+}
+
 function deleteImg(i) {
   const [sprite] = sprites.splice(i, 1);
   const { room } = engine;
@@ -21,7 +26,10 @@ function addSprite(e) {
     const files = e.target.files;
     for (let file of files) {
       const src = URL.createObjectURL(file);
-      engine.addSprite(src);
+      const sprite = engine.addSprite(src);
+      sprite.on("pointerdown",e=>{
+        selectSprite(sprite)
+      })
     }
   }
   el.click()
@@ -37,7 +45,7 @@ function select(sprite){
   <v-card
     v-for="(sprite, i) in sprites"
     :key="i"
-    @click="$emit('selectSprite',sprite)"
+    @click="selectSprite(sprite)"
   >
     <v-card-text>
       <v-row align="center">

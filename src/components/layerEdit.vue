@@ -2,8 +2,10 @@
 import { reactive, ref } from "@vue/reactivity";
 import Params from "./layers/params.vue";
 import GradientTransformation from "./layers/gradientTransformation.vue";
+import { useGameStore } from "@/store/game-store"
+const gameStore = useGameStore()
+const selectedSprite = toRef(gameStore, "selectedSprite");
 
-let { selectedSprite } = defineProps(["selectedSprite"]);
 const window = ref(0);
 const windows = reactive([
   {
