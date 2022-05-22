@@ -16,7 +16,7 @@ Menu for layer choose
 ![layers](/github/layers.png)
 ## Params
 ![params](/github/params.png)
-## Gradient transformation (faster method)
+## Curves (faster method)
 applies gradient transformation by changing the graph of the function.
 the Lagrange polynomial is used as a function for the spline.
 * click to add a new point
@@ -24,7 +24,7 @@ the Lagrange polynomial is used as a function for the spline.
 * double click to remove a point
 
 ![img](/github/GTF.png)
-## Gradient transformation
+## Curves
 applies gradient transformation by changing the graph of the function.
 It works like "Gradient transformation (faster method)", but when the spline changes, a histogram is drawn.
 You can change calculation mode from CPU to GPU.
