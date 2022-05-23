@@ -2,99 +2,44 @@
 import { onMounted } from "@vue/runtime-core";
 import { ref, reactive,watch, toRef} from "vue";
 import {useGameStore} from "@/store/game-store"
+import gavrilov from "./binarization/gavrilov"
+import otsu from "./binarization/otsu"
+import Niblack from "./binarization/Niblack"
+import Sauvola from "./binarization/Sauvola"
+import Vulf from "./binarization/Wolf"
+import Rote from "./binarization/Bredly Rote"
 const gameStore = useGameStore()
 const selectedSprite = toRef(gameStore, "selectedSprite");
-
 
 let src;
 let img;
 let pixels;
-let Canvas;
+let gpu;
 const cnv = ref()
+
 async function spriteUpdate(e){
   src = selectedSprite.value.texture.textureCacheIds[0];
   img = await engine.loadImg(src)
   pixels = await engine.loadPixels(img)
   const { width, height } = img;
-  Canvas = cnv.value;
-  Canvas.width = width;
-  Canvas.height = height;
-  Canvas.style.width = "100%";
+  const canvas = cnv.value;
+  canvas.width = width;
+  canvas.height = height;
+  canvas.style.width = "100%";
   updateMethod(0)
 }
 watch(selectedSprite,spriteUpdate)
 onMounted(spriteUpdate)
-  
 
-function gavrilov() {
-  let { width: w, height: h } = img;
-  let sum = 0;
-  for (let i = 0; i < pixels.length; i += 1) {
-    sum += pixels[i]
-  }
-  const t = Number(sum) / pixels.length * 3
-  let newPixels = new Float32Array(pixels.length)
-  let s = 0;
-  let f = 0;
-  for (let i = 0; i < pixels.length; i += 1) {
-    const pixel = pixels[i];
-    if (i % 4 == 3) newPixels[i] = pixel;
-    if (i % 4 == 0) {
-      s = pixels[i] + pixels[i + 1] + pixels[i + 2]
-      if (s <= t) f = 0; else f = 255;
-      newPixels[i] = f;
-      newPixels[i + 1] = f;
-      newPixels[i + 2] = f;
-    }
-  }
-  return newPixels;
-}
-function Otsu() {
-  let { width: w, height: h } = img;
-  let sum = 0;
-  let colorsCount = (new Array(256)).fill(0)
-  for (let i = 0; i < pixels.length; i += 1) {
-    if (i % 4 < 3) colorsCount[pixels[i]] += 1
-  }
-  colorsCount = colorsCount.map(e => e / (3 * w * h))
-  const mt = colorsCount.reduce((ans, v, i) => ans + v * i, 0)
-  let max = 0
-  let maxT = 0
-  for (let t = 0; t < colorsCount.length; t++) {
-    const colorsCountT = colorsCount.slice(0, t)
-    const w1 = colorsCountT.reduce((ans, e) => ans + e, 0)
-    const w2 = 1 - w1
-    const m1 = colorsCountT.reduce((ans, v, i) => ans + v * i, 0) / w1
-    const m2 = (mt - m1 * w1) / w2
-    const sigma = w1 * w2 * ((m1 - m2) ** 2)
-    if (sigma > max) {
-      max = sigma
-      maxT = t
-    }
-  }
-  let newPixels = new Float32Array(pixels.length)
-  let s = 0;
-  let f = 0;
-  for (let i = 0; i < pixels.length; i += 1) {
-    const pixel = pixels[i];
-    if (i % 4 == 3) newPixels[i] = pixel;
-    if (i % 4 == 0) {
-      s = (pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3
-      if (s <= maxT) f = 0; else f = 255;
-      newPixels[i] = f;
-      newPixels[i + 1] = f;
-      newPixels[i + 2] = f;
-    }
-  }
-  return newPixels;
-}
 function getNewPixels(v) {
-  if (v == 0) return gavrilov()
-  if (v == 1) return Otsu()
+  if (v == 0) return gavrilov(pixels,img)
+  if (v == 1) return otsu(pixels,img)
 }
-function updateMethod(v) {
+const isLocal = ref(false)
+function globalMethods(v){
+  isLocal.value = false;
   const { width, height } = img;
-  const Ctx = Canvas.getContext("2d");
+  const Ctx = cnv.value.getContext("2d");
   let newPixels;
   newPixels = getNewPixels(v);
   const image = new ImageData(
@@ -104,7 +49,35 @@ function updateMethod(v) {
   );
   Ctx.putImageData(image, 0, 0);
 }
+const cnv1 = ref(undefined)
+const a = ref(15)
+const k = ref(-0.2)
+function localMethods(v){
+  const { width, height } = img;
+  if(!gpu){
+    const canvasLocal = cnv1.value;
+    canvasLocal.width = width;
+    canvasLocal.height = height;
+    canvasLocal.style.width = "100%";
+    const gl = canvasLocal.getContext("webgl2", { premultipliedAlpha: false });
+    gpu = new GPU({
+      canvas: canvasLocal,
+      context: gl,
+      //mode: 'dev'
+    });
+    isLocal.value = true
+  }
+  if(v==2) Niblack(gpu, img, a.value, k.value)
+  if(v==3) Sauvola(gpu, img, a.value, k.value)
+  if(v==4) Vulf(gpu, img, a.value, k.value)
+  if(v==5) Rote(gpu, img, a.value, k.value)
+}
 
+function updateMethod(v) {
+  if(v<2) return globalMethods(v);
+  localMethods(v)
+  
+}
 
 const method = ref(0)
 const types = reactive([
@@ -116,12 +89,33 @@ const types = reactive([
     title: "Otsu",
     value: 1,
   },
+  {
+    title: "Niblack",
+    value: 2,
+  },
+  {
+    title: "Sauvola",
+    value: 3,
+  },
+  {
+    title: "Wolf",
+    value: 4,
+  },
+  {
+    title: "Bradley",
+    value: 5,
+  },
 ]);
 
 </script>
 <template>
   <v-select @update:modelValue="updateMethod" label="methods" :items="types" v-model="method" />
-  <v-row justify="center">
+  <v-row justify="center" v-show="!isLocal">
     <canvas ref="cnv" />
+  </v-row>
+  <v-row justify="center" v-show="isLocal">
+    <canvas ref="cnv1" />
+    <v-text-field v-model="a" step="1" @update:model-value="updateMethod(method)" label="размер" type="number" hide-details="auto"/>
+    <v-text-field v-model="k" step="0.1" @update:model-value="updateMethod(method)" label="коэффициент" type="number" hide-details="auto"/>
   </v-row>
 </template>

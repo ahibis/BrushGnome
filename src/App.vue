@@ -1,7 +1,7 @@
 <script setup>
 import "./assets/main.scss";
 import { Engine, Img } from "./assets/engine";
-import { ref, onMounted, toRefs } from "vue";
+import { ref, onMounted, toRefs, watch } from "vue";
 import spriteEdit from "@/components/spriteEdit.vue";
 import spriteList from "@/components/spriteList.vue";
 import LayerEdit from "@/components/layerEdit.vue";
@@ -11,8 +11,22 @@ import {useGameStore} from "@/store/game-store"
 const gameStore = useGameStore()
 const {sprites} = gameStore;
 const {selectedSprite,drawer,isEditor,isList} = toRefs(gameStore);
+watch(gameStore,()=>{
+  const {isEditor,isList} = gameStore;
+  const cash={
+    isEditor,
+    isList
+  }
+  localStorage.appCash = JSON.stringify(cash);
+})
 
 onMounted(() => {
+  if(localStorage.appCash){
+    const cash = JSON.parse(localStorage.appCash)
+    for(let key in cash){
+      gameStore[key] = cash[key]
+    }
+  }
   engine = new Engine(document.getElementById("window"), sprites);
   vm = this;
 })

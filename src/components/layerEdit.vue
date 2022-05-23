@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref } from "@vue/reactivity";
+import { reactive, ref, toRef } from "@vue/reactivity";
 import Params from "./layers/params.vue";
 import GradientTransformation from "./layers/gradientTransformation.vue";
 import { useGameStore } from "@/store/game-store"

@@ -7,6 +7,7 @@ the app for redaction images on web and windows.
 * [0.2.0](https://github.com/ahibis/image-editor/tree/v0.2.0)
 * [0.2.3](https://github.com/ahibis/image-editor/tree/v0.2.3)
 * [0.3.0](https://github.com/ahibis/image-editor/tree/v0.3.0)
+* [0.4.0](https://github.com/ahibis/image-editor/tree/v0.4.0)
 ## optimization
 For optimization, I have tried several image and array processing methods, and for this project I am trying to use the best methods.
 [my tests](https://github.com/ahibis/speedTestJs)
@@ -39,9 +40,25 @@ at the beginning, the algorithm searches for the color of the average pixel. The
 ### Otsu method
 https://en.wikipedia.org/wiki/Otsu%27s_method
 
-![gavrilov](/github/otsu.png)
+![Otsu](/github/otsu.png)
+
+### Niblack method
+https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_niblack_sauvola.html
+
+![Niblack](/github//Niblack.png)
+### Sauvola
+https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_niblack_sauvola.html
+
+![Sauvola](/github/Sauvola.png)
+
+### Wolf
+![Wolf](/github/Wolf.png)
+
+### Bradley
+![Bradley](/github//Bradly.png)
 ## Options
 ![options](/github/Options.png)
+
 
 * download - download image
 * editor toggle - shows/hides the sprite editor in the right bar
@@ -60,7 +77,7 @@ You can open most redactor options at a separate window
 - [x] gradient transformation
 - [x] mask filter
 - [x] movable and resizable sprites 
-- [ ] binarization
+- [x] binarization
 - [ ] spatial filtering
 - [ ] Frequency Filter 
 - [ ] mobile version
