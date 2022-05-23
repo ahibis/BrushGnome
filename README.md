@@ -46,15 +46,15 @@ https://en.wikipedia.org/wiki/Otsu%27s_method
 https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_niblack_sauvola.html
 
 ![Niblack](/github//Niblack.png)
-### Sauvola
+### Sauvola method
 https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_niblack_sauvola.html
 
 ![Sauvola](/github/Sauvola.png)
 
-### Wolf
+### Wolf method
 ![Wolf](/github/Wolf.png)
 
-### Bradley
+### Bradley method
 ![Bradley](/github//Bradly.png)
 ## Options
 ![options](/github/Options.png)
